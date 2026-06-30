@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GACONMC | Server Minecraft</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/ZRrz3xv7/avatargcmc.png">
+
+    <link rel="stylesheet" href="luat.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Fira+Code&family=Lexend:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #64ffda;
+            --bg-glass: rgba(17, 19, 23, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #e6edf3;
+            --text-dim: #8b949e;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url('nengif2.gif');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            font-family: 'Lexend', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 30px;
+            width: 100%;
+            height: 85vh;
+            /* Cố định chiều cao khung tổng */
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            flex: 0 0 280px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            overflow-y: auto;
+            /* Cho phép cuộn menu nếu nhiều luật */
+        }
+
+        .avatar {
+            width: 80px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            padding: 4px;
+            margin-bottom: 15px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            color: var(--text-dim);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(100, 255, 218, 0.1);
+        }
+
+        /* CONTENT AREA */
+        .content {
+            flex: 1;
+            position: relative;
+            height: 100%;
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 35px;
+            height: 100%;
+            /* Luôn cao bằng container */
+            overflow-y: auto;
+            /* Cuộn nội dung bên trong nếu quá dài */
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* PHẦN TRANG TRÍ DASHBOARD */
+        .tag {
+            font-family: 'Fira Code';
+            color: var(--primary);
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-card {
+            background: rgba(100, 255, 218, 0.05);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .copy-btn {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--primary);
+            color: #111;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .player-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(100, 255, 218, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .player-head {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+    <div class="container">
+        <aside class="sidebar">
+            <img src="https://i.ibb.co/ZRrz3xv7/avatargcmc.png" class="avatar">
+            <h3 style="font-size: 1.1rem;">Gà Con MC</h3>
+            <p style="font-size: 0.75rem; color: var(--primary); letter-spacing: 1px;">SURVIVAL CHILL</p>
+
+            <nav class="nav-menu">
+                <div class="nav-item active" onclick="openTab(event, 'intro')"><i class="fas fa-home"></i> Giới thiệu
+                </div>
+                <div class="nav-item" onclick="openTab(event, 'rule1')"><i class="fas fa-gavel"></i> Luật I. Sở hữu trí
+                    tuệ
+                </div>
+                <div class="nav-item" onclick="openTab(event, 'rule2')"><i class="fas fa-gavel"></i> Luật II. Giao
+                    thương - Economy Policy</div>
+                <div class="nav-item" onclick="openTab(event, 'rule3')"><i class="fas fa-gavel"></i> Luật III. Quảng cáo
+                    - Tiếp thị
+                </div>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <section id="intro" class="tab-content active">
+                <span class="tag">>_ TRẠNG THÁI HIỆN THỊ TRỰC TẾ TRONG SERVER</span>
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-rocket" style="color: var(--primary);"></i> GaConMC
+                </h2>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
+                    <div class="stat-card">
+                        <i class="fas fa-signal" id="status-icon" style="margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.65rem; color: var(--text-dim);">TRẠNG THÁI</div>
+                        <div id="server-status" style="font-size: 0.9rem; font-weight: 800;">ĐANG TẢI...</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users" style="color: var(--primary); margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.65rem; color: var(--text-dim);">ONLINE</div>
+                        <div id="player-count" style="font-size: 0.9rem; font-weight: 800;">- / -</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-microchip" style="color: var(--primary); margin-bottom: 8px;"></i>
+                        <div style="font-size: 0.65rem; color: var(--text-dim);">PHIÊN BẢN</div>
+                        <div id="server-version" style="font-size: 0.8rem; font-weight: 800;">...</div>
+                    </div>
+                </div>
+
+                <div
+                    style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 20px;">
+                    <h4
+                        style="font-size: 0.8rem; color: var(--primary); font-family: 'Fira Code'; margin-bottom: 10px;">
+                        >_ MOTD:</h4>
+                    <div id="motd-text" style="font-size: 0.85rem; font-family: 'Fira Code'; color: #ccc;">Đang kết
+                        nối...</div>
+                </div>
+
+                <div
+                    style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; border: 1px solid var(--border);">
+                    <h4 style="font-size: 0.8rem; color: var(--primary); margin-bottom: 10px;"><i
+                            class="fas fa-users-viewfinder"></i> THÀNH VIÊN ONLINE:</h4>
+                    <div id="player-list" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                </div>
+
+                <div class="copy-btn" onclick="copyIP()">
+                    <span><i class="fas fa-terminal"></i> IP: gaconmc.ddns.net:19033</span>
+                    <span style="font-size: 0.7rem; font-weight: 800;">SAO CHÉP</span>
+                </div>
+            </section>
+
+            <section id="rule1" class="tab-content rule-page">
+                <span class="tag">>_ HỆ THỐNG LIÊN KẾT CỘNG ĐỒNG</span>
+
+                <div class="discord-banner-bar">
+                    <div class="dis-info">
+                        <div class="dis-title">
+                            <i class="fab fa-discord"></i> THAM GIA DISCORD
+                        </div>
+                        <div class="dis-subtitle">
+                            Cập nhật tin tức nhanh nhất và giao lưu cùng cộng đồng.
+                        </div>
+                    </div>
+                    <a href="https://discord.com/channels/1392510100240859216/1489522592732811434" target="_blank"
+                        class="dis-btn-white">
+                        THAM GIA NGAY
+                    </a>
+                </div>
+            </section>
+            <section id="rule2" class="tab-content rule-page">
+                <span class="tag">>_ HỆ THỐNG LIÊN KẾT CỘNG ĐỒNG</span>
+
+                <div class="discord-banner-bar">
+                    <div class="dis-info">
+                        <div class="dis-title">
+                            <i class="fab fa-discord"></i> THAM GIA DISCORD
+                        </div>
+                        <div class="dis-subtitle">
+                            Cập nhật tin tức nhanh nhất và giao lưu cùng cộng đồng.
+                        </div>
+                    </div>
+                    <a href="https://discord.com/channels/1392510100240859216/1489564467304861757" target="_blank"
+                        class="dis-btn-white">
+                        THAM GIA NGAY
+                    </a>
+                </div>
+            </section>
+            <section id="rule3" class="tab-content rule-page">
+                <span class="tag">>_ HỆ THỐNG LIÊN KẾT CỘNG ĐỒNG</span>
+
+                <div class="discord-banner-bar">
+                    <div class="dis-info">
+                        <div class="dis-title">
+                            <i class="fab fa-discord"></i> THAM GIA DISCORD
+                        </div>
+                        <div class="dis-subtitle">
+                            Cập nhật tin tức nhanh nhất và giao lưu cùng cộng đồng.
+                        </div>
+                    </div>
+                    <a href="https://discord.com/channels/1392510100240859216/1489584388239785994" target="_blank"
+                        class="dis-btn-white">
+                        THAM GIA NGAY
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Chuyển Tab
+        function openTab(evt, tabName) {
+            const contents = document.querySelectorAll(".tab-content");
+            const navs = document.querySelectorAll(".nav-item");
+
+            contents.forEach(c => c.classList.remove("active"));
+            navs.forEach(n => n.classList.remove("active"));
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Lấy dữ liệu Server
+        async function updateServerStatus() {
+            try {
+                const res = await fetch('https://api.mcstatus.io/v2/status/java/185.207.166.16:19033');
+                const data = await res.json();
+
+                const sIcon = document.getElementById('status-icon');
+                const sText = document.getElementById('server-status');
+
+                if (data.online) {
+                    sText.innerText = "ONLINE"; sText.style.color = "var(--primary)";
+                    sIcon.style.color = "var(--primary)";
+                    document.getElementById('player-count').innerText = `${data.players.online} / ${data.players.max}`;
+                    document.getElementById('server-version').innerText = data.version.name_clean;
+                    document.getElementById('motd-text').innerText = data.motd.clean;
+
+                    const list = document.getElementById('player-list');
+                    if (data.players.list?.length > 0) {
+                        list.innerHTML = data.players.list.map(p => `
+                            <div class="player-tag">
+                                <img src="https://mc-heads.net/avatar/${p.uuid}/20" class="player-head">
+                                <span>${p.name_clean}</span>
+                            </div>`).join('');
+                    } else {
+                        list.innerHTML = '<span style="color: gray; font-style: italic;">Không có ai online</span>';
+                    }
+                } else {
+                    sText.innerText = "OFFLINE"; sText.style.color = "#ff6b6b";
+                    sIcon.style.color = "#ff6b6b";
+                }
+            } catch (e) { console.error("Lỗi API"); }
+        }
+
+        function copyIP() {
+            navigator.clipboard.writeText("gaconmc.ddns.net:19033");
+            alert("Đã sao chép IP!");
+        }
+
+        updateServerStatus();
+        setInterval(updateServerStatus, 30000);
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+
+        // Sửa lại hàm openTab để tự đóng menu sau khi chọn luật
+        function openTab(evt, tabName) {
+            const contents = document.querySelectorAll(".tab-content");
+            const navs = document.querySelectorAll(".nav-item, .nav-sub-item");
+
+            contents.forEach(c => c.classList.remove("active"));
+            navs.forEach(n => n.classList.remove("active"));
+
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+
+            // Nếu đang ở mobile, chọn xong thì tự đóng menu sidebar
+            if (window.innerWidth <= 900) {
+                toggleSidebar();
+            }
+        }
+    </script>
+</body>
+
+</html>
